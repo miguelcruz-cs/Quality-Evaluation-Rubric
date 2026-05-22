@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quality Evaluation Rubric — Miguel Cruz</title>
+  <meta name="description" content="QA scoring rubric with behavioral anchors, weighted dimensions, and calibration system. Case study by Miguel Cruz." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B1623;
+      --surface: #111E2E;
+      --surface-2: #162234;
+      --border: rgba(255,255,255,0.07);
+      --accent: #3AACBF;
+      --text: #CBD8E4;
+      --text-muted: #8FA3B1;
+      --white: #FFFFFF;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; max-width: 100%; height: auto; }
+
+    /* NAV */
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .nav-back {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-back:hover { color: var(--accent); text-decoration: none; }
+
+    /* LAYOUT */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 72px 24px 56px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .meta-bar {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .meta-item span {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .meta-item strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .tagline {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 56px 0;
+      border-top: 1px solid var(--border);
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    p { margin-bottom: 16px; color: var(--text); max-width: 68ch; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ARTIFACT */
+    .artifact-img {
+      border-radius: 8px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+      margin-top: 8px;
+      width: 100%;
+    }
+    .artifact-subtitle {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 16px;
+    }
+
+    /* SHEETS CALLOUT */
+    .sheets-callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sheets-callout-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .sheets-callout-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .sheets-callout-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 56ch;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .sheets-callout-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .sheets-callout-link:hover { text-decoration: underline; }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    th {
+      text-align: left;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px 10px 0;
+    }
+    td {
+      padding: 12px 12px 12px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    td:first-child { font-weight: 500; color: var(--white); }
+    .weight { color: var(--accent); font-weight: 600; }
+
+    /* TABS LIST */
+    .tab-list {
+      list-style: none;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .tab-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+    }
+    .tab-num {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      width: 20px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .tab-name { color: var(--white); font-weight: 500; }
+    .tab-desc { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+
+    /* CTAS */
+    .cta-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: #0B1623; }
+    .btn-primary:hover { background: #4fc0d4; text-decoration: none; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer span { font-size: 13px; color: var(--text-muted); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 48px 20px 40px; }
+      .meta-bar { gap: 20px; }
+      .container { padding: 0 20px; }
+      nav { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Miguel Cruz</div>
+    <a class="nav-back" href="https://mpascualcruz.com" target="_blank" rel="noopener noreferrer">
+      ← mpascualcruz.com
+    </a>
+  </nav>
+
+  <div class="hero">
+    <div class="meta-bar">
+      <div class="meta-item"><span>Category</span><strong>QA Framework</strong></div>
+      <div class="meta-item"><span>Tools</span><strong>Google Sheets · CleanShot X · ElevenLabs</strong></div>
+      <div class="meta-item"><span>Year</span><strong>2026</strong></div>
+    </div>
+    <h1>Quality Evaluation Rubric</h1>
+    <p class="tagline">QA scoring rubric with behavioral anchors, weighted dimensions, and calibration system — case study for mpascualcruz.com</p>
+  </div>
+
+  <div class="container">
+
+    <section>
+      <h2>Context</h2>
+      <p>Built a structured QA evaluation rubric in Google Sheets covering seven scoring dimensions — Greeting/Opening, Accuracy, Efficiency, Empathy & Tone, Categorization, Process Adherence, and Documentation Quality. Each dimension includes a 1–4 point scale with behavioral anchors and channel applicability flags (email, live chat, voice). Dimensions are weighted by operational priority — accuracy and efficiency carry more weight than formatting — and the sheet auto-calculates a composite score.</p>
+      <p>Supporting tabs cover root cause tagging, dispute process, stakeholder reporting by audience, AI integration layer, VoC correlation, and a training response matrix that maps failure patterns to specific interventions.</p>
+    </section>
+
+    <section>
+      <h2>Approach</h2>
+      <p>The rubric reduced calibration variance between evaluators by creating shared behavioral anchors instead of relying on judgment. Team leads could move from "this interaction scored low" to "here's the specific behavior that needs to change" in a single conversation.</p>
+      <p>The supporting framework closed the loop further — root cause tags surfaced systemic training gaps, the stakeholder reporting guide translated QA scores into language leadership could act on, and the AI integration layer documented how quality data feeds into automated triage and deflection systems.</p>
+    </section>
+
+    <section>
+      <h2>Outcome</h2>
+      <p>Quality assurance only works when both evaluators score the same interaction the same way. Most rubrics fail at that — not because people aren't trying, but because the criteria aren't concrete enough. This playbook was built to end that argument. Seven dimensions, each with a 1–4 scale and behavioral anchors describing exactly what each score looks like in practice, plus a supporting framework that closes the loop from evaluation to training response to KB update.</p>
+    </section>
+
+    <section>
+      <h2>The Artifact</h2>
+      <img
+        class="artifact-img"
+        src="https://github.com/miguelcruz-cs/Quality-Evaluation-Rubric/blob/main/quality-evaluation-rubric.png?raw=true"
+        alt="Quality Evaluation Rubric Scorecard — Seven scoring dimensions with behavioral anchors, channel flags, and composite scoring"
+        loading="lazy"
+        width="860"
+        height="520"
+      />
+      <p class="artifact-subtitle">QA Rubric Template. Seven Scoring Dimensions with Behavioral Anchors, Channel Flags, and Composite Scoring.</p>
+
+      <div class="sheets-callout">
+        <div class="sheets-callout-label">Full Artifact</div>
+        <div class="sheets-callout-title">Miguel Cruz — QA Operations Playbook</div>
+        <p class="sheets-callout-desc">A 10-tab Google Sheets document. This screenshot shows Tab 2 (Scorecard). All other tabs — root cause tagging, cadence guide, dispute process, stakeholder reporting, AI integration, VoC correlation, training matrix, and KB feedback loop — are visible in the full workbook.</p>
+        <a class="sheets-callout-link" href="https://docs.google.com/spreadsheets/d/1a47JSev0P5-KJnrg6OXglB925rBhOPPfSLM-qFOWAgM/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+          Open in Google Sheets →
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Scoring Dimensions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Weight</th>
+            <th>Scale</th>
+            <th>Channels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Greeting / Opening</td><td class="weight">0.50</td><td>1–4</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Accuracy</td><td class="weight">1.75</td><td>1–4</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Efficiency</td><td class="weight">1.50</td><td>1–4</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Empathy & Tone</td><td class="weight">1.50</td><td>1–4</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Categorization</td><td class="weight">1.00</td><td>1–4</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Process Adherence</td><td class="weight">0.25</td><td>Pass / Fail</td><td>Email · Chat · Voice</td></tr>
+          <tr><td>Documentation Quality</td><td class="weight">0.25</td><td>Pass / Fail</td><td>Email · Chat · Voice</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Playbook Structure — 10 Tabs</h2>
+      <ul class="tab-list">
+        <li><div class="tab-num">01</div><div><div class="tab-name">Framework Overview</div><div class="tab-desc">Executive summary. Three-layer model: Evaluation Engine, Intelligence Layer, Operational Rhythm.</div></div></li>
+        <li><div class="tab-num">02</div><div><div class="tab-name">Scorecard</div><div class="tab-desc">The core rubric — portfolio screenshot. All 7 dimensions, anchors, channel flags, composite formula, and scoring thresholds.</div></div></li>
+        <li><div class="tab-num">03</div><div><div class="tab-name">Root Cause Tagging Reference</div><div class="tab-desc">Dimension-level root cause options. Enables agent-level vs. team-level pattern detection.</div></div></li>
+        <li><div class="tab-num">04</div><div><div class="tab-name">Cadence & Sampling Guide</div><div class="tab-desc">Evaluation frequency by team size, sampling methodology, calibration session structure.</div></div></li>
+        <li><div class="tab-num">05</div><div><div class="tab-name">Dispute & Misalignment Process</div><div class="tab-desc">72-hour dispute window, blind re-review protocol, systemic misalignment trigger conditions.</div></div></li>
+        <li><div class="tab-num">06</div><div><div class="tab-name">Stakeholder Reporting Guide</div><div class="tab-desc">Team Lead (weekly) · Manager (monthly) · Leadership (quarterly). Same data, different abstraction level.</div></div></li>
+        <li><div class="tab-num">07</div><div><div class="tab-name">AI Integration Layer</div><div class="tab-desc">QA as structured training data for AI triage. AutoQA scope, limits, and AI agent evaluation using same dimensions.</div></div></li>
+        <li><div class="tab-num">08</div><div><div class="tab-name">Voice of Customer Integration</div><div class="tab-desc">CSAT/NPS correlation matrix. Rubric review triggers when QA and customer scores diverge.</div></div></li>
+        <li><div class="tab-num">09</div><div><div class="tab-name">Training Response Matrix</div><div class="tab-desc">Pattern thresholds → specific interventions, owners, and timelines.</div></div></li>
+        <li><div class="tab-num">10</div><div><div class="tab-name">KB Feedback Loop</div><div class="tab-desc">QA failure → knowledge base update triggers. Direct pipeline from Accuracy root causes to content governance.</div></div></li>
+      </ul>
+    </section>
+
+    <div class="cta-group">
+      <a class="btn btn-primary" href="https://docs.google.com/spreadsheets/d/1a47JSev0P5-KJnrg6OXglB925rBhOPPfSLM-qFOWAgM/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+        View Full Artifact (Google Sheets)
+      </a>
+      <a class="btn btn-ghost" href="https://mpascualcruz.com" target="_blank" rel="noopener noreferrer">
+        ← Back to Portfolio
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Miguel Cruz · Quality Enablement Systems · 2026</span>
+    <a href="https://mpascualcruz.com" target="_blank" rel="noopener noreferrer" style="font-size:13px; color: var(--text-muted);">mpascualcruz.com</a>
+  </footer>
+
+</body>
+</html>
